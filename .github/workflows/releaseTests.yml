@@ -1,0 +1,32 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*.*'  # Triggers on version tags
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'  # Specify the distribution (e.g., 'adopt', 'zulu', 'temurin')
+
+      - name: Build with Maven
+        run: mvn clean package  # Adjust as necessary for your build command
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          files: |
+            target/GroupProject-1.0-SNAPSHOT.jar
+            Dockerfile
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
