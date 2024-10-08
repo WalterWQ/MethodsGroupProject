@@ -10,6 +10,6 @@ CODE OF CONDUCT
 
 SIGNATURES:
 Member 1 - Adrian Cis
-Member 2 -
+Member 2 - Carter Morrison
 Member 3 -
 Member 4 -
