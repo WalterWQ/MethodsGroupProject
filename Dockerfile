@@ -1,4 +1,4 @@
 FROM openjdk:latest
-COPY ./target/classes/org /tmp/org
+COPY ./target/classes/group8 /tmp/group8
 WORKDIR /tmp
-ENTRYPOINT ["java", "org.example.Main"]
+ENTRYPOINT ["java", "group8.project_files.Main"]
