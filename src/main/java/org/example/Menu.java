@@ -1,37 +1,64 @@
 package org.example;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.Scanner;
+
+/**
+ * A simple menu that allows the user to select 1-5 menu options or exit to leave the program
+ */
 
 public class Menu {
 
+    /**
+     * A simple menu that allows the user to select 1-5 menu options or they can type exit to leave the menu / application
+     */
     public static void main(String[] args) {
-        // Create the main frame
-        JFrame frame = new JFrame("Methods Group Project - Group 8");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
+        Scanner scanner = new Scanner(System.in); // Scanner to read the users input
+        String input = ""; // Variable to store the user's input
 
-        // Create a panel to hold the buttons
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(4, 2, 10, 10)); // 4x2 grid layout for 8 buttons // CHANGE THIS IS THE TEXT IN THE BUTTONS IS TOO LONG ETC
+        // Infinite loop to repeatedly display the menu until "exit" is typed
+        while (true) {
+            // Display the menu options
+            System.out.println("Please choose an option (type 'exit' to quit):");
+            System.out.println("1. Option 1");
+            System.out.println("2. Option 2");
+            System.out.println("3. Option 3");
+            System.out.println("4. Option 4");
+            System.out.println("5. Option 5");
 
-        // Create 8 buttons and add them to the panel !!CHANGING THIS DOESEN'T AFFECT THE UI LAYOUT SEE THE COMMENT ABOVE FROM GRIDLAYOUT!!
-        for (int i = 1; i <= 8; i++) {
-            JButton button = new JButton("Option " + i);
-            int optionNumber = i; // Captures the options / Button number for which button the user has pressed
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Option " + optionNumber + " selected!");
-                }
-            });
-            panel.add(button);
+            // Read the users input in the menu and convert it to lowercase
+            input = scanner.nextLine().trim().toLowerCase();
+
+            // Check if the user typed exit and quit the program
+            if (input.equals("exit")) {
+                System.out.println("Exiting the program");
+                break; // Exit the loop and kill the program
+            }
+
+            // Read the users input and selects the relative menu option
+            switch (input) {
+                case "1":
+                    System.out.println("Option 1 selected!");
+                    break;
+                case "2":
+                    System.out.println("Option 2 selected!");
+                    break;
+                case "3":
+                    System.out.println("Option 3 selected!");
+                    break;
+                case "4":
+                    System.out.println("Option 4 selected!");
+                    break;
+                case "5":
+                    System.out.println("Option 5 selected!");
+                    break;
+                default:
+                    System.out.println("Invalid option, please try again.");
+                    break; // If the input is invalid ask the user again
+            }
         }
 
-        // Add the panel to the frame and make it visible
-        frame.add(panel);
-        frame.setVisible(true);
+        // Close the scanner
+        scanner.close();
     }
 }
+
