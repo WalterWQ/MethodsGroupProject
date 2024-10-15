@@ -1,4 +1,5 @@
 FROM openjdk:latest
-COPY ./target/classes/group8 /tmp/group8
 WORKDIR /tmp
-ENTRYPOINT ["java", "group8.project_files.Main"]
+COPY ./target/classes/group8 /app/group8
+COPY ./target/GroupProject-Development-shaded.jar /app/GroupProject-Development-shaded.jar
+ENTRYPOINT ["java", "-jar", "/app/GroupProject-Development-shaded.jar"]
