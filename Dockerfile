@@ -1,11 +1,5 @@
-# Use a specific Java 17 JDK image to ensure it runs the dependincies with no issues with diffrent java 17 builds
-FROM eclipse-temurin:17-jdk-alpine
-
-# Set the working directory inside the container
-WORKDIR /app
-
-# Copy the self-contained JAR into the container
-COPY ./target/GroupProject-1.0-SNAPSHOT.jar /app/GroupProject.jar
-
-# Run the JAR file
-ENTRYPOINT ["java", "-jar", "GroupProject.jar"]
+FROM openjdk:latest
+WORKDIR /tmp
+COPY ./target/classes/group8 /app/group8
+COPY ./target/GroupProject-Development.jar /app/GroupProject-Development.jar
+ENTRYPOINT ["java", "-jar", "/app/GroupProject-Development.jar"]
