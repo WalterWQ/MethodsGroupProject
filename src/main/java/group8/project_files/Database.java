@@ -47,7 +47,7 @@ public class Database {
              ResultSet rs = stmt.executeQuery(sqlQuery)) {
 
             if(rs.next()) {
-                int totalPopulation = rs.getInt("total_population");
+                long totalPopulation = rs.getLong("total_population");
                 System.out.println("The total population in World is: " + totalPopulation);
             }
         } catch (SQLException e) {
