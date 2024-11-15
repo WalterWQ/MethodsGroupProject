@@ -10,6 +10,7 @@ public class Main {
         Database db = new Database();
         // Test database connection
         db.testConnect();
+        db.getTopPopWithinType(0,0);
 
 
     }
