@@ -1,4 +1,4 @@
-package org.example;
+package group8.project_files;
 
 import java.util.Scanner;
 
