@@ -1,4 +1,4 @@
-package org.example;
+package group8.projectfiles;
 
 public class Main {
     public static void main(String[] args) {
