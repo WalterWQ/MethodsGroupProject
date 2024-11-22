@@ -6,6 +6,6 @@ public class Main {
         System.out.println("Hello world!");
         Database db = new Database();
 
-        db.testConnection();
+        db.testConnect();
     }
 }

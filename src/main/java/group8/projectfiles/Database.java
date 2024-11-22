@@ -2,29 +2,37 @@ package group8.projectfiles;
 
 import java.sql.*;
 
+/**
+ * This class is responsible for creation and manipulation of the database
+ */
 public class Database {
-    String currentDirectory = System.getProperty("user.dir");
-    String dbLocation = "\\src\\main\\resources\\data.sqlite";
-    String url = "jdbc:sqlite:" + currentDirectory + dbLocation;
-    public void testConnection() {
-        try (Connection conn = DriverManager.getConnection(url)) {
-            if (conn != null) {
-                System.out.println("Connected to the SQLite database.");
 
-                // Create a statement
-                Statement stmt = conn.createStatement();
-                String sql = "SELECT * FROM city"; // Replace with your query
+    // Login details for mysql DB
+    private final String jdbcUrl = "jdbc:h2:mem:testdb"; // In-memory database
+    private final String username = "sa";              // Default username
+    private final String password = "";                // Default password
 
-                // Execute the query and process the results
-                ResultSet rs = stmt.executeQuery(sql);
-                while (rs.next()) {
-                    System.out.println("Column1: " + rs.getString("Name"));
-                    System.out.println("Column2: " + rs.getInt("ID"));
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        } }
+    /**
+     * Constructor for db, tells H2 to load in order for DB to work in-memory
+     */
+    Database() {
+        // On creation load H2
+        try {
+            // Explicitly load the H2 driver
+            Class.forName("org.h2.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Failed to load H2 driver", e);
+        }
     }
 
-
+    /**
+     * Class that tests for H2 in-memory db connection
+     */
+    public void testConnect() {
+       try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
+           System.out.println("Connected to H2 in-memory database!");
+       } catch (SQLException e) {
+           throw new RuntimeException(e);
+       }
+   }
+}
