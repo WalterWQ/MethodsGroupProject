@@ -1,38 +1,49 @@
 package group8.projectfiles;
 
+
 import java.sql.*;
 
 /**
- * This class is responsible for creation and manipulation of the database
+ * This class is responsible for manipulation of the database
  */
 public class Database {
 
-    // Login details for mysql DB
-    private final String jdbcUrl = "jdbc:h2:mem:testdb"; // In-memory database
-    private final String username = "sa";              // Default username
-    private final String password = "";                // Default password
+    // Login details for MySQL DB (adjusted for Docker Compose)
+    private final String jdbcUrl = "jdbc:mysql://mysql:3306/world"; // Use 'mysql' as the hostname
+    private final String username = "root";                      // Default username
+    private final String password = "rootpassword";              // Password (as set in docker-compose)
 
     /**
-     * Constructor for db, tells H2 to load in order for DB to work in-memory
+     * This method proves the DB connected and displays tables
      */
-    Database() {
-        // On creation load H2
-        try {
-            // Explicitly load the H2 driver
-            Class.forName("org.h2.Driver");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Failed to load H2 driver", e);
+    public void initDB() {
+        // Connect to MySQL container
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
+            // Print success message if connection is successful
+            System.out.println("Connected to MYSQL database!");
+            showTables(connection);
+        } catch (SQLException e) {
+            throw new RuntimeException("Error connecting to the database", e);
         }
     }
 
     /**
-     * Class that tests for H2 in-memory db connection
+     * This method runs a query to show all tables inside of the db
+     * @param connection db connection
      */
-    public void testConnect() {
-       try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
-           System.out.println("Connected to H2 in-memory database!");
-       } catch (SQLException e) {
-           throw new RuntimeException(e);
-       }
-   }
+    private static void showTables(Connection connection) {
+        String query = "SHOW TABLES";  // SQL command to show all tables
+
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+
+            System.out.println("Tables in the database:");
+            while (resultSet.next()) {
+                // Display each table name
+                System.out.println(resultSet.getString(1));  // Table name is in the first column
+            }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving tables: " + e.getMessage());
+        }
+    }
 }
