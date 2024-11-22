@@ -1,4 +1,4 @@
-package group8.projectfiles;
+package group8.project_files;
 
 import java.io.*;
 import java.sql.*;
@@ -12,6 +12,11 @@ public class DatabaseExecutor {
     private final String username = "root"; // Database username
     private final String password = "rootpassword"; // Database password
 
+    /**
+     * This method runs executeSQLfiles and allows for use outside of class
+     *
+     * @param filePath
+     */
     public void runSqlFile(String filePath) {
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
             System.out.println("Connected to the database successfully!");
@@ -22,6 +27,12 @@ public class DatabaseExecutor {
         }
     }
 
+    /**
+     * This method handles all the logic for executing SQL files privately
+     *
+     * @param connection
+     * @param filePath
+     */
     private void executeSqlFile(Connection connection, String filePath) {
         // Display the current working directory
         System.out.println("Current working directory: " + new File(".").getAbsolutePath());
@@ -56,4 +67,13 @@ public class DatabaseExecutor {
             System.err.println("Error reading the SQL file: " + e.getMessage());
             e.printStackTrace();
         } catch (SQLException e) {
-            System.err.println("Error executing SQL statement: " + e.getMessage());}}}
+            System.err.println("Error executing SQL statement: " + e.getMessage());
+        }
+    }
+
+    public void populateDb() {
+        runSqlFile("./db/country.sql");
+        runSqlFile("./db/city.sql");
+        runSqlFile("./db/countrylanguage.sql");
+    }
+}

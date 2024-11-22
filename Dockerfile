@@ -20,4 +20,4 @@ RUN mvn clean package -DskipTests
 EXPOSE 8080
 
 # Command to run the generated .jar file
-CMD ["java", "-jar", "target/GroupProject-1.0-SNAPSHOT.jar"]
+CMD ["java", "-jar", "target/GroupProject-Development.jar"]

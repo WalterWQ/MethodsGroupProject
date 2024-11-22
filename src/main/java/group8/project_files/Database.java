@@ -1,4 +1,4 @@
-package group8.projectfiles;
+package group8.project_files;
 
 
 import java.sql.*;
