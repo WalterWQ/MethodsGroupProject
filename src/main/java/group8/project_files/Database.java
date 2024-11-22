@@ -2,6 +2,7 @@ package group8.project_files;
 
 
 import java.sql.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class is responsible for manipulation of the database
@@ -17,6 +18,13 @@ public class Database {
      * This method proves the DB connected and displays tables
      */
     public void initDB() {
+        //Delay init to give docker SQL container time to start
+        try {
+            TimeUnit.SECONDS.sleep(3);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         // Connect to MySQL container
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
             // Print success message if connection is successful

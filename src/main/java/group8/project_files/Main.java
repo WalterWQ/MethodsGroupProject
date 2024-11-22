@@ -13,7 +13,9 @@ public class Main {
 
         // Prove that DB connected and show tables
         db.initDB();
-        userMenu.start();
+
+        //MENU IS SCUFFED FIX IT CARTER, ITS NOT SUPPOSED TO HAVE A MAIN111!!!111!!!
+        //userMenu.start();
 
     }
 }
