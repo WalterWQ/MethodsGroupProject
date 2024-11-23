@@ -8,7 +8,7 @@ import java.sql.*;
  */
 public class DatabaseExecutor {
     // DB login info
-    private final String jdbcUrl = "jdbc:mysql://mysql:3306/world"; // Update with your database URL
+    private final String jdbcUrl = "jdbc:mysql://mysql:3306/"; // Update with your database URL
     private final String username = "root"; // Database username
     private final String password = "rootpassword"; // Database password
 
@@ -73,9 +73,7 @@ public class DatabaseExecutor {
 
     public void populateDb(boolean isEmpty) {
         if(isEmpty) {
-        runSqlFile("./db/country.sql");
-        runSqlFile("./db/city.sql");
-        runSqlFile("./db/countrylanguage.sql");
+        runSqlFile("./db/create.sql");
     } else {
             System.out.println("DB NOT EMPTY! POPULATION FAILED.");
         }

@@ -11,7 +11,7 @@ public class Database {
     // Create db execute instance
     DatabaseExecutor dbExec = new DatabaseExecutor();
     // Login details for MySQL DB (adjusted for Docker Compose)
-    private final String jdbcUrl = "jdbc:mysql://mysql:3306/world"; // Use 'mysql' as the hostname
+    private final String jdbcUrl = "jdbc:mysql://mysql:3306/"; // Use 'mysql' as the hostname
     private final String username = "root";                      // Default username
     private final String password = "rootpassword";              // Password (as set in docker-compose)
 
@@ -30,7 +30,12 @@ public class Database {
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
             // Print success message if connection is successful
             System.out.println("Connected to MYSQL database!");
+
+
+            // Show tables and check if empty
             Boolean isEmpty = showTables(connection);
+
+            //if empty populate
             dbExec.populateDb(isEmpty);
         } catch (SQLException e) {
             throw new RuntimeException("Error connecting to the database", e);
