@@ -71,9 +71,13 @@ public class DatabaseExecutor {
         }
     }
 
-    public void populateDb() {
+    public void populateDb(boolean isEmpty) {
+        if(isEmpty) {
         runSqlFile("./db/country.sql");
         runSqlFile("./db/city.sql");
         runSqlFile("./db/countrylanguage.sql");
+    } else {
+            System.out.println("DB NOT EMPTY! POPULATION FAILED.");
+        }
     }
 }
