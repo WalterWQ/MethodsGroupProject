@@ -9,14 +9,13 @@ public class Main {
         Database db = new Database();
         Menu userMenu = new Menu();
 
-        // Create scanner for text
-        Scanner userScanner =new Scanner(System.in);
-
         // Connect to DB and test
         db.initDB();
 
+        // Create scanner for text
+        Scanner scanner = new Scanner(System.in);
         // Start Menu
-        userMenu.start(userScanner);
+        userMenu.start(scanner);
 
     }
 }
