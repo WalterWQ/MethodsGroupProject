@@ -71,6 +71,10 @@ public class DatabaseExecutor {
         }
     }
 
+    /**
+     * This method runs the create.sql file in order to populate db
+     * @param isEmpty takes in a boolean that if 1 implies db empty and populates
+     */
     public void populateDb(boolean isEmpty) {
         if(isEmpty) {
         runSqlFile("./db/create.sql");
