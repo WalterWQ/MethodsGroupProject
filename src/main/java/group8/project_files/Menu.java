@@ -12,18 +12,20 @@ public class Menu {
      * A simple menu that allows the user to select 1-5 menu options or they can type exit to leave the menu / application
      *
      */
-    public void start(Scanner scanner) {
+    public void start(Scanner scanner, Database db) {
         String input = ""; // Variable to store the user's input
 
         // Infinite loop to repeatedly display the menu until "exit" is typed
         while (true) {
             // Display the menu options
+            System.out.println("----------------- MAIN MENU -----------------");
             System.out.println("Please choose an option (type 'exit' to quit):");
-            System.out.println("1. Option 1");
+            System.out.println("1. Top Cities");
             System.out.println("2. Option 2");
             System.out.println("3. Option 3");
             System.out.println("4. Option 4");
             System.out.println("5. Option 5");
+            System.out.println("----------------- MAIN MENU END -----------------");
 
             // Read the users input in the menu and convert it to lowercase
             input = scanner.nextLine().trim().toLowerCase();
@@ -37,7 +39,7 @@ public class Menu {
             // Read the users input and selects the relative menu option
             switch (input) {
                 case "1":
-                    System.out.println("Option 1 selected!");
+                    db.getTopCities();
                     break;
                 case "2":
                     System.out.println("Option 2 selected!");

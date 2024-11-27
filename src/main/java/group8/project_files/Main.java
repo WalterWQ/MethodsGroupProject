@@ -15,7 +15,7 @@ public class Main {
         // Create scanner for text
         Scanner scanner = new Scanner(System.in);
         // Start Menu
-        userMenu.start(scanner);
+        userMenu.start(scanner,db);
 
     }
 }
