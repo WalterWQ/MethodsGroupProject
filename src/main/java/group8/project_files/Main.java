@@ -1,23 +1,21 @@
 package group8.project_files;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+
+import java.util.Scanner;
 
 public class Main {
-    static String url = "jdbc:sqlite:db.sqlite"; // Database file
-
     public static void main(String[] args) {
-        System.out.println("Hello world!");
 
-        // DEBUG DATABASE CONNECTION
-        try (Connection conn = DriverManager.getConnection(url)) {
-            if (conn != null) {
-                System.out.println("DB CONNECTED!");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        // Create instances of classes
+        Database db = new Database();
+        Menu userMenu = new Menu();
+
+        // Connect to DB and test
+        db.initDB();
+
+        // Create scanner for text
+        Scanner scanner = new Scanner(System.in);
+        // Start Menu
+        userMenu.start(scanner);
 
     }
 }
