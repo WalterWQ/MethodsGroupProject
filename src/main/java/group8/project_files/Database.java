@@ -2,6 +2,7 @@ package group8.project_files;
 
 
 import java.sql.*;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -14,6 +15,7 @@ public class Database {
     private final String jdbcUrl = "jdbc:mysql://mysql:3306/"; // Use 'mysql' as the hostname
     private final String username = "root";                      // Default username
     private final String password = "rootpassword";              // Password (as set in docker-compose)
+
 
     /**
      * This method proves the DB connected and displays tables
@@ -68,5 +70,35 @@ public class Database {
         }
         // if no tables exist
         return true;
+    }
+
+    /**
+     * This method will display the top populated cities within (world,continent,region,country,district)
+     */
+    public static void getTopCities(){
+        //Scanner for user input
+        Scanner userScanner = new Scanner(System.in);
+
+        //Get top amount from user
+        int topAmount = -1;
+        System.out.println("Input top amount of cities you would like to see");
+        topAmount = Integer.parseInt(userScanner.nextLine());
+
+        //Get scope from user (world,continent,region,country,district)
+        int userScopeChoice = -1;
+        System.out.println("Select the scope of your search:");
+        System.out.println("1 - World");
+        System.out.println("2 - Continent");
+        System.out.println("3 - Region");
+        System.out.println("4 - Country");
+        System.out.println("5 - District");
+        userScopeChoice = Integer.parseInt(userScanner.nextLine());
+
+        // Create Query
+        String query = "SELECT *"
+
+        //Run Query
+
+        //Display Results
     }
 }
