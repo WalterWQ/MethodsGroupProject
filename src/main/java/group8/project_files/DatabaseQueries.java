@@ -107,10 +107,153 @@ public class DatabaseQueries {
     public void getTopCitiesN() {
         topCitiesMenu citiesMenu = getTopCitiesMenu();
 
-        topCitiesQuery(citiesMenu);
+        topCitiesQueryN(citiesMenu);
     }
 
-    private void topCitiesQuery(topCitiesMenu citiesMenu) {
+    /**
+     * This method will display top populated cities (world,continent,region,country,district) lrg to small no filters
+     */
+    public void getTopCitiesAll() {
+        //initialise sql query
+        String query = "";
+
+        //Create Menu
+        System.out.println("----GET TOP CITIES ALL-----");
+        System.out.println("1 - World");
+        System.out.println("2 - Continent");
+        System.out.println("3 - Region");
+        System.out.println("4 - Country");
+        System.out.println("5 - District");
+        System.out.println("-----MENU END-----");
+        // Get user input
+        Scanner userInput = new Scanner(System.in);
+        int userSelect = getValidIntegerInput(userInput,1,5);
+
+        //Act on user selection and create sql statement
+        switch (userSelect) {
+            // world
+            case 1:
+                query = "SELECT city.Name, country.Name AS CountryName,city.District,city.Population " +
+                        "FROM city " +
+                        "JOIN country ON country.Code=city.CountryCode " +
+                        "ORDER BY city.Population DESC;";
+                break;
+                // continent
+            case 2:
+                //let user choose continent
+                ArrayList<String> continentsList = getAllContinents();
+                //Show options
+                sqlMenu(continentsList);
+                //Get input
+                int userSelection = getValidIntegerInput(userInput,1,continentsList.size()-1);
+                // Turn into string for sql
+                String userSelectionString = continentsList.get(userSelection);
+                // Create query
+                query = "SELECT city.Name, country.Name AS CountryName,city.District,city.Population " +
+                        "FROM city " +
+                        "JOIN country ON country.Code=city.CountryCode " +
+                        "WHERE country.Continent = \""+ userSelectionString + "\" " +
+                        "ORDER BY city.Population DESC;";
+                break;
+                // region
+            case 3:
+                //Get regions list and display to user
+                ArrayList<String> regionsList = getAllRegions();
+                sqlMenu(regionsList);
+                //Get user input
+                int userSelectionCase3 = getValidIntegerInput(userInput,1,regionsList.size()-1);
+                //Turn input into string for sql
+                String userSelectionStringCase3 = regionsList.get(userSelectionCase3);
+
+                query = "SELECT city.Name, country.Name AS CountryName,city.District,city.Population " +
+                        "FROM city " +
+                        "JOIN country ON country.Code=city.CountryCode " +
+                        "WHERE country.Region = \""+ userSelectionStringCase3 + "\" " +
+                        "ORDER BY city.Population DESC;";
+
+
+                break;
+                // country
+            case 4:
+                //Get country list and display to user
+                ArrayList<String> countryList = getAllCountries();
+                sqlMenu(countryList);
+                //Get user input
+                int userSelectionCase4 = getValidIntegerInput(userInput,1, countryList.size()-1);
+                //Turn user input to string for sql
+                String userSelectionStringCase4 = countryList.get(userSelectionCase4);
+
+                query = "SELECT city.Name, country.Name AS CountryName,city.District,city.Population " +
+                        "FROM city " +
+                        "JOIN country ON country.Code=city.CountryCode " +
+                        "WHERE country.Name = \""+ userSelectionStringCase4 + "\" " +
+                        "ORDER BY city.Population DESC;";
+                break;
+                // district
+            case 5:
+                //Get country list and display to user
+                ArrayList<String> countryListCase5 = getAllCountries();
+                sqlMenu(countryListCase5);
+                //Get user input
+                int userSelectionCase4_1 = getValidIntegerInput(userInput,1,countryListCase5.size()-1);
+                //Turn user input into string for further searches
+                String userSelectionCase4_1String = countryListCase5.get(userSelectionCase4_1);
+                //Get list of all districts in users country
+                ArrayList<String> districtsList = getAllDistricts(userSelectionCase4_1String);
+                //Display menu
+                sqlMenu(districtsList);
+                //Get user input for district
+                int userSelectionCase4_2 = getValidIntegerInput(userInput,1,districtsList.size()-1);
+                //Turn into string for sql
+                String userSelectionCase4_2String = districtsList.get(userSelectionCase4_2);
+
+                query = "SELECT city.Name, country.Name AS CountryName,city.District,city.Population " +
+                        "FROM city " +
+                        "JOIN country ON country.Code=city.CountryCode " +
+                        "WHERE city.District = \""+ userSelectionCase4_2String + "\" " +
+                        "ORDER BY city.Population DESC;";
+
+                break;
+        }
+
+        // Run query
+        topCitiesQuery(query);
+
+    }
+    private void topCitiesQuery(String query) {
+        //Run Query
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
+             // Create statement from query
+             Statement useStatement = connection.createStatement();
+             PreparedStatement queryStatement = connection.prepareStatement(query)) {
+
+            //use world db
+            useStatement.execute("USE world;");
+
+
+            // Execute the query
+            ResultSet resultSet = queryStatement.executeQuery();
+
+            // Display the results
+            System.out.println("----------------- RESULTS -----------------");
+            while (resultSet.next()) {
+                System.out.println();
+                System.out.print("Name:" + resultSet.getString("Name") + " | ");
+                System.out.print("Country Name:" + resultSet.getString("CountryName") + " | ");
+                System.out.print("District:" + resultSet.getString("District") + " | ");
+                System.out.print("Population:" + resultSet.getString("Population") + " | ");
+                System.out.println();
+            }
+            System.out.println("----------------- RESULTS END -----------------");
+
+        } catch (SQLException e) {
+            // Handle SQL exceptions
+            System.err.println("Database error: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void topCitiesQueryN(topCitiesMenu citiesMenu) {
         //Run Query
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
              // Create statement from query
@@ -129,9 +272,12 @@ public class DatabaseQueries {
             // Display the results
             System.out.println("----------------- RESULTS -----------------");
             while (resultSet.next()) {
-                String cityName = resultSet.getString("Name");
-                int population = resultSet.getInt("Population");
-                System.out.printf("%-10s | %d%n", cityName, population);
+                System.out.println();
+                System.out.print("Name:" + resultSet.getString("Name") + " | ");
+                System.out.print("Country Name:" + resultSet.getString("CountryName") + " | ");
+                System.out.print("District:" + resultSet.getString("District") + " | ");
+                System.out.print("Population:" + resultSet.getString("Population") + " | ");
+                System.out.println();
             }
             System.out.println("----------------- RESULTS END -----------------");
 
@@ -166,23 +312,23 @@ public class DatabaseQueries {
         switch (userScopeChoice) {
             // Top Cities World
             case 1:
-                query = sqlTopWorld();
+                query = sqlTopWorldN();
                 break;
             // Top cities Continent
             case 2:
-                query = sqlTopCities(userScanner);
+                query = sqlTopCitiesN(userScanner);
                 break;
             // top cities Region
             case 3:
-                query = sqlTopRegion(userScanner);
+                query = sqlTopRegionN(userScanner);
                 break;
             // top cities Country
             case 4:
-                query = sqlTopCountry(userScanner);
+                query = sqlTopCountryN(userScanner);
                 break;
             // top cities district
             case 5:
-                query = sqlTopDistrict(userScanner);
+                query = sqlTopDistrictN(userScanner);
                 break;
         }
         topCitiesMenu citiesMenu = new topCitiesMenu(query, topAmount);
@@ -197,8 +343,8 @@ public class DatabaseQueries {
      *
      * @return Query
      */
-    private static String sqlTopWorld() {
-        return "SELECT city.Name, city.Population " +
+    private static String sqlTopWorldN() {
+        return "SELECT city.Name, country.Name AS CountryName,city.District,city.Population " +
                 "FROM city " +
                 "JOIN country ON city.CountryCode = country.Code " +
                 "ORDER BY city.Population DESC " +
@@ -211,7 +357,7 @@ public class DatabaseQueries {
      * @param userScanner System.in Scanner
      * @return Query
      */
-    private String sqlTopCities(Scanner userScanner) {
+    private String sqlTopCitiesN(Scanner userScanner) {
         String continentChosen;
         String query;
         // Display Options
@@ -226,7 +372,7 @@ public class DatabaseQueries {
         // Fill based on input
 
         //Query
-        query = "SELECT city.Name, city.Population " +
+        query = "SELECT city.Name, country.Name AS CountryName,city.District,city.Population " +
                 "FROM city " +
                 "JOIN country ON city.CountryCode = country.Code " +
                 "WHERE country.Continent = \"" + continentChosen + "\" " +
@@ -241,7 +387,7 @@ public class DatabaseQueries {
      * @param userScanner System.in Scanner
      * @return Query
      */
-    private String sqlTopRegion(Scanner userScanner) {
+    private String sqlTopRegionN(Scanner userScanner) {
         String regionChosen;
         String query;
         // Display Options
@@ -254,7 +400,7 @@ public class DatabaseQueries {
         regionChosen = regionsList.get(userRegion);
 
         //Query
-        query = "SELECT city.Name, city.Population " +
+        query = "SELECT city.Name, country.Name AS CountryName,city.District,city.Population " +
                 "FROM city " +
                 "JOIN country ON city.CountryCode = country.Code " +
                 "WHERE country.Region = \"" + regionChosen + "\" " +
@@ -268,7 +414,7 @@ public class DatabaseQueries {
      * @param userScanner System.in Scanner
      * @return query
      */
-    private String sqlTopCountry(Scanner userScanner) {
+    private String sqlTopCountryN(Scanner userScanner) {
         String countryChosen;
         String query;
         // Display Options
@@ -282,7 +428,7 @@ public class DatabaseQueries {
         // Fill based on input
 
         //Query
-        query = "SELECT city.Name, city.Population " +
+        query = "SELECT city.Name, country.Name AS CountryName,city.District,city.Population " +
                 "FROM city " +
                 "JOIN country ON city.CountryCode = country.Code " +
                 "WHERE country.Name = \"" + countryChosen + "\" " +
@@ -296,7 +442,7 @@ public class DatabaseQueries {
      * @param userScanner System.in Scanner
      * @return query
      */
-    private String sqlTopDistrict(Scanner userScanner) {
+    private String sqlTopDistrictN(Scanner userScanner) {
         String query;
         //Get Countries
         ArrayList<String> countriesList = getAllCountries();
@@ -323,7 +469,7 @@ public class DatabaseQueries {
 
 
         //Query
-        query = "SELECT city.Name, city.Population " +
+        query = "SELECT city.Name, country.Name AS CountryName,city.District,city.Population " +
                 "FROM city " +
                 "JOIN country ON city.CountryCode = country.Code " +
                 "WHERE city.District = \"" + districtChosenString + "\" " +
