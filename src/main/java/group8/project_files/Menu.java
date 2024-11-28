@@ -39,7 +39,7 @@ public class Menu {
             // Read the users input and selects the relative menu option
             switch (input) {
                 case "1":
-                    db.getTopCities();
+                    db.getDbQuery().getTopCitiesN();
                     break;
                 case "2":
                     System.out.println("Option 2 selected!");
