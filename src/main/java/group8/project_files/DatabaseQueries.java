@@ -110,6 +110,15 @@ public class DatabaseQueries {
         topCitiesQuery(citiesMenu);
     }
 
+    /**
+     * This method will display top populated cities (world,continent,region,country,district) lrg to small no filters
+     */
+    public void getTopCitiesAll() {
+
+        //Create Menu
+
+    }
+
     private void topCitiesQuery(topCitiesMenu citiesMenu) {
         //Run Query
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
@@ -166,23 +175,23 @@ public class DatabaseQueries {
         switch (userScopeChoice) {
             // Top Cities World
             case 1:
-                query = sqlTopWorld();
+                query = sqlTopWorldN();
                 break;
             // Top cities Continent
             case 2:
-                query = sqlTopCities(userScanner);
+                query = sqlTopCitiesN(userScanner);
                 break;
             // top cities Region
             case 3:
-                query = sqlTopRegion(userScanner);
+                query = sqlTopRegionN(userScanner);
                 break;
             // top cities Country
             case 4:
-                query = sqlTopCountry(userScanner);
+                query = sqlTopCountryN(userScanner);
                 break;
             // top cities district
             case 5:
-                query = sqlTopDistrict(userScanner);
+                query = sqlTopDistrictN(userScanner);
                 break;
         }
         topCitiesMenu citiesMenu = new topCitiesMenu(query, topAmount);
@@ -197,7 +206,7 @@ public class DatabaseQueries {
      *
      * @return Query
      */
-    private static String sqlTopWorld() {
+    private static String sqlTopWorldN() {
         return "SELECT city.Name, city.Population " +
                 "FROM city " +
                 "JOIN country ON city.CountryCode = country.Code " +
@@ -211,7 +220,7 @@ public class DatabaseQueries {
      * @param userScanner System.in Scanner
      * @return Query
      */
-    private String sqlTopCities(Scanner userScanner) {
+    private String sqlTopCitiesN(Scanner userScanner) {
         String continentChosen;
         String query;
         // Display Options
@@ -241,7 +250,7 @@ public class DatabaseQueries {
      * @param userScanner System.in Scanner
      * @return Query
      */
-    private String sqlTopRegion(Scanner userScanner) {
+    private String sqlTopRegionN(Scanner userScanner) {
         String regionChosen;
         String query;
         // Display Options
@@ -268,7 +277,7 @@ public class DatabaseQueries {
      * @param userScanner System.in Scanner
      * @return query
      */
-    private String sqlTopCountry(Scanner userScanner) {
+    private String sqlTopCountryN(Scanner userScanner) {
         String countryChosen;
         String query;
         // Display Options
@@ -296,7 +305,7 @@ public class DatabaseQueries {
      * @param userScanner System.in Scanner
      * @return query
      */
-    private String sqlTopDistrict(Scanner userScanner) {
+    private String sqlTopDistrictN(Scanner userScanner) {
         String query;
         //Get Countries
         ArrayList<String> countriesList = getAllCountries();
