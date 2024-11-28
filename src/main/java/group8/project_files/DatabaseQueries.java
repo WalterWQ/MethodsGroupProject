@@ -13,7 +13,7 @@ public class DatabaseQueries {
     /**
      * This method gets the population lrg->small from world,continent,region
      */
-    private void getTopCountry() {
+    public void getTopCountry() {
         //Open user input scanner
         Scanner userInput = new Scanner(System.in);
         //User choice int
@@ -28,22 +28,75 @@ public class DatabaseQueries {
         userChoiceMenu = getValidIntegerInput(userInput,1,3);
 
         //Decide which query to use
+
         switch(userChoiceMenu) {
+            // World
             case 1:
-                query = "SELECT Code,Name,Continent,Region,Population,Capital " +
-                        "FROM country " +
-                        "ORDER BY Population DESC";
+                query = "SELECT country.Name,country.Continent,country.Region,country.Population,city.Name AS CapitalName " +
+                        "FROM world.country " +
+                        "JOIN city ON city.ID=country.capital " +
+                        "ORDER BY Population DESC; ";
                 break;
+                // Continent
+            case 2:
+                // Get continent menu and let user choose continent
+                ArrayList<String> continentsList = getAllContinents();
+                sqlMenu(continentsList);
+                // user input
+                int userChoice = getValidIntegerInput(userInput,1,continentsList.size()-1);
+                // Convert to string
+                String userChoiceString = continentsList.get(userChoice);
+
+                query = "SELECT country.Name,country.Continent,country.Region,country.Population,city.Name AS CapitalName " +
+                        "FROM world.country " +
+                        "JOIN city ON city.ID=country.capital " +
+                        "WHERE country.Continent = \""+ userChoiceString +"\" " +
+                        "ORDER BY Population DESC; ";
+
+                break;
+                //Region
+            case 3:
+                //Get Continent
+                ArrayList<String> regionsList = getAllRegions();
+                sqlMenu(regionsList);
+                //Get user input
+                int userChoiceCase3 = getValidIntegerInput(userInput,1,regionsList.size()-1);
+                //Convert to string for query
+                String userChoiceCase3String = regionsList.get(userChoiceCase3);
+
+                //Query
+                query = "SELECT country.Name,country.Continent,country.Region,country.Population,city.Name AS CapitalName " +
+                        "FROM world.country " +
+                        "JOIN city ON city.ID=country.capital " +
+                        "WHERE country.Region = \""+ userChoiceCase3String +"\" " +
+                        "ORDER BY Population DESC; ";
+                break;
+
+
         }
+
 
         // Run Query
         try(Connection conn = DriverManager.getConnection(jdbcUrl,username,password);
+            Statement useStatement = conn.createStatement();
             Statement stmt = conn.createStatement()) {
+
+            // use world
+            useStatement.execute("USE world;");
+
             //Get result set
             ResultSet rs = stmt.executeQuery(query);
 
             //process result set
-
+            while(rs.next()) {
+                System.out.println();
+                System.out.print("Name :" +rs.getString("Name") + " |");
+                System.out.print("Continent :" +rs.getString("Continent") + " |");
+                System.out.print("Region :" +rs.getString("Region") + " |");
+                System.out.print("Population :" +rs.getString("Population") + " |");
+                System.out.print("Capital :" +rs.getString("CapitalName") + " |");
+            }
+            System.out.println();
     }catch (SQLException e) {
         e.printStackTrace();}
     }
@@ -463,4 +516,5 @@ public class DatabaseQueries {
         }
         return validInput;
     }
+
 }

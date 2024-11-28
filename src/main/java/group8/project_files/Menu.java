@@ -20,8 +20,8 @@ public class Menu {
             // Display the menu options
             System.out.println("----------------- MAIN MENU -----------------");
             System.out.println("Please choose an option (type 'exit' to quit):");
-            System.out.println("1. Top Cities");
-            System.out.println("2. Option 2");
+            System.out.println("1. Top Cities(N)");
+            System.out.println("2. Top Population (World,Continent,Region)");
             System.out.println("3. Option 3");
             System.out.println("4. Option 4");
             System.out.println("5. Option 5");
@@ -42,7 +42,7 @@ public class Menu {
                     db.getDbQuery().getTopCitiesN();
                     break;
                 case "2":
-                    System.out.println("Option 2 selected!");
+                    db.getDbQuery().getTopCountry();
                     break;
                 case "3":
                     System.out.println("Option 3 selected!");
