@@ -10,8 +10,42 @@ public class DatabaseQueries {
     private final String username = "root";                      // Default username
     private final String password = "rootpassword";
 
-    private void getTopCitiesRefactor() {
+    /**
+     * This method gets the population lrg->small from world,continent,region
+     */
+    private void getTopCountry() {
+        //Open user input scanner
+        Scanner userInput = new Scanner(System.in);
+        //User choice int
+        int userChoiceMenu;
+        //Query
+        String query = "";
+        //Show menu
+        System.out.println("--------- Get Top Country Population Menu ---------");
+        System.out.println("1 - World");
+        System.out.println("2 - Continent");
+        System.out.println("3 - Region");
+        userChoiceMenu = getValidIntegerInput(userInput,1,3);
 
+        //Decide which query to use
+        switch(userChoiceMenu) {
+            case 1:
+                query = "SELECT Code,Name,Continent,Region,Population,Capital " +
+                        "FROM country " +
+                        "ORDER BY Population DESC";
+                break;
+        }
+
+        // Run Query
+        try(Connection conn = DriverManager.getConnection(jdbcUrl,username,password);
+            Statement stmt = conn.createStatement()) {
+            //Get result set
+            ResultSet rs = stmt.executeQuery(query);
+
+            //process result set
+
+    }catch (SQLException e) {
+        e.printStackTrace();}
     }
 
     /**
