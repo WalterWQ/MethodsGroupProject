@@ -17,7 +17,7 @@ public class DatabaseQueries {
     /**
      * This method will display the top populated cities within (world,continent,region,country,district)
      */
-    public void getTopCities() {
+    public void getTopCitiesN() {
         topCitiesMenu citiesMenu = getTopCitiesMenu();
 
         topCitiesQuery(citiesMenu);
