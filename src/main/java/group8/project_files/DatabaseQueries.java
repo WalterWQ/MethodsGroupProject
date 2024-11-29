@@ -282,6 +282,75 @@ public class DatabaseQueries {
         //Run Query
         topCapitalCityQuery(query);
     }
+    /**
+     * This method will display all capital cities (world,continent,region) lrg to small with amount of results chosen by user (N)
+     */
+    public void getTopCapitalCitiesN() {
+        //Input Scanner
+        Scanner userInput = new Scanner(System.in);
+        //Query
+        String query = "";
+        //Display menu
+        System.out.println("1 - World");
+        System.out.println("2 - Continent");
+        System.out.println("3 - Region");
+        //Get choice
+        int userMenuChoice = getValidIntegerInput(userInput,1,3);
+
+        //Prompt user for amount of outputs
+        System.out.println("How many results do you want to see?");
+        String userResultsInt = String.valueOf(getValidIntegerInput(userInput,1,99999));
+
+        //Create sql
+        switch (userMenuChoice) {
+            //World
+            case 1:
+                query = "SELECT city.Name,country.Name AS CountryName,city.Population " +
+                        "FROM city " +
+                        "JOIN country ON city.CountryCode=country.Code " +
+                        "ORDER BY city.Population DESC " +
+                        "LIMIT " + userResultsInt + ";";
+                break;
+            //Continent
+            case 2:
+                //Get continents and display menu
+                ArrayList<String> continentsList = getAllContinents();
+                sqlMenu(continentsList);
+                //Get input
+                int userChoiceCase2 = getValidIntegerInput(userInput,1,continentsList.size()-1);
+                //Turn into string for query
+                String userChoiceCase2String = continentsList.get(userChoiceCase2);
+
+                query = "SELECT city.Name,country.Name AS CountryName,city.Population " +
+                        "FROM city " +
+                        "JOIN country ON city.CountryCode=country.Code " +
+                        "WHERE country.Continent = \"" + userChoiceCase2String + "\" " +
+                        "ORDER BY city.Population DESC " +
+                        "LIMIT " + userResultsInt + ";";
+                break;
+            //Region
+            case 3:
+                //Get regions and display menu
+                ArrayList<String> regionsList = getAllRegions();
+                sqlMenu(regionsList);
+                //Get input
+                int userChoiceCase3 = getValidIntegerInput(userInput,1,regionsList.size()-1);
+                //Turn to string for query
+                String userChoiceCase3String = regionsList.get(userChoiceCase3);
+
+                query = "SELECT city.Name,country.Name AS CountryName,city.Population " +
+                        "FROM city " +
+                        "JOIN country ON city.CountryCode=country.Code " +
+                        "WHERE country.Region = \"" + userChoiceCase3String + "\" " +
+                        "ORDER BY city.Population DESC " +
+                        "LIMIT " + userResultsInt + ";";
+                break;
+        }
+
+        //Run Query
+        topCapitalCityQuery(query);
+    }
+
 
     /**
      * Runs final query and displays info returned by query
