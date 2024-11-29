@@ -21,9 +21,9 @@ public class Menu {
             System.out.println("----------------- MAIN MENU -----------------");
             System.out.println("Please choose an option (type 'exit' to quit):");
             System.out.println("1. Top Cities(N)");
-            System.out.println("2. Top Population (World,Continent,Region)");
-            System.out.println("3. Top Cities(LRG>SML)");
-            System.out.println("4. Option 4");
+            System.out.println("2. Top Cities(LRG>SML)");
+            System.out.println("3. Top Population (World,Continent,Region)");
+            System.out.println("4. Top Capital Cities(LRG>SML)");
             System.out.println("5. Option 5");
             System.out.println("----------------- MAIN MENU END -----------------");
 
@@ -42,13 +42,13 @@ public class Menu {
                     db.getDbQuery().getTopCitiesN();
                     break;
                 case "2":
-                    db.getDbQuery().getTopCountry();
-                    break;
-                case "3":
                     db.getDbQuery().getTopCitiesAll();
                     break;
+                case "3":
+                    db.getDbQuery().getTopCountry();
+                    break;
                 case "4":
-                    System.out.println("Option 4 selected!");
+                    db.getDbQuery().getTopCapitalCities();
                     break;
                 case "5":
                     System.out.println("Option 5 selected!");
