@@ -351,6 +351,138 @@ public class DatabaseQueries {
         topCapitalCityQuery(query);
     }
 
+    /**
+     * This method displays people living/not in cities (continent,region,country) lrg to small
+     */
+    public void getPopulationLivingCities(){
+        //Scanner for user input
+        Scanner userInput = new Scanner(System.in);
+        //Query
+        String query = "";
+
+        //Display menu
+        System.out.println("------- Living/Not Cities Menu -------");
+        System.out.println("1 - Continent");
+        System.out.println("2 - Region");
+        System.out.println("3 - Country");
+
+        //Get user input
+        int userMenuChoice = getValidIntegerInput(userInput,1,3);
+
+        //Create Query
+        switch (userMenuChoice) {
+            // continent
+            case 1:
+                query = "SELECT \n" +
+                        "    country.Continent, \n" +
+                        "    SUM(city.Population) AS CityPopulation, \n" +
+                        "    SUM(country.Population) - SUM(city.Population) AS OutsideCityPopulation, \n" +
+                        "    SUM(country.Population) AS TotalPopulation,\n" +
+                        "    (SUM(city.Population) / SUM(country.Population)) * 100 AS CityPopulationPercentage,\n" +
+                        "((SUM(country.Population) - SUM(city.Population)) / SUM(country.Population)) * 100 AS OutsideCityPopulationPercentage\n" +
+                        "FROM city\n" +
+                        "JOIN country ON city.CountryCode = country.Code\n" +
+                        "GROUP BY country.Continent;\n";
+
+                //Run query
+                topPopulationLivingQuery(query,"Continent");
+                break;
+                // region
+            case 2:
+                //Get list of regions and display menu
+                ArrayList<String> regionList = getAllRegions();
+                sqlMenu(regionList);
+                //Get user input
+                int userInputCase2 = getValidIntegerInput(userInput,1,regionList.size()-1);
+                //Convert to string for query
+                String userInputCase2String = regionList.get(userInputCase2);
+
+                query = "SELECT " +
+                        "    country.Region, " +
+                        "    SUM(city.Population) AS CityPopulation, " +
+                        "    SUM(country.Population) - SUM(city.Population) AS OutsideCityPopulation, " +
+                        "    SUM(country.Population) AS TotalPopulation," +
+                        "    (SUM(city.Population) / SUM(country.Population)) * 100 AS CityPopulationPercentage," +
+                        "    ((SUM(country.Population) - SUM(city.Population)) / SUM(country.Population)) * 100 AS OutsideCityPopulationPercentage " +
+                        "FROM city " +
+                        "JOIN country ON city.CountryCode = country.Code " +
+                        "WHERE country.Region = \""+userInputCase2String+"\" " +
+                        "GROUP BY country.Region;";
+
+                //Run query
+                topPopulationLivingQuery(query,"Region");
+                break;
+                // country
+            case 3:
+                //Get list of countries and display
+                ArrayList<String>countriesList = getAllCountries();
+                sqlMenu(countriesList);
+                //Get user choice
+                int userChoiceCase3 = getValidIntegerInput(userInput,1,countriesList.size()-1);
+                //turn into string for sql
+                String userChoiceCase3String = countriesList.get(userChoiceCase3);
+
+                query = "SELECT \n" +
+                        "    country.Name, \n" +
+                        "    SUM(city.Population) AS CityPopulation, \n" +
+                        "    country.Population - SUM(city.Population) AS OutsideCityPopulation, \n" +
+                        "    country.Population AS TotalPopulation,\n" +
+                        "    (SUM(city.Population) / country.Population) * 100 AS CityPopulationPercentage,\n" +
+                        "    ((country.Population - SUM(city.Population)) / country.Population) * 100 AS OutsideCityPopulationPercentage\n" +
+                        "FROM city\n" +
+                        "JOIN country ON city.CountryCode = country.Code\n" +
+                        "WHERE country.Name = \""+userChoiceCase3String+"\" " +
+                        "GROUP BY country.Name, country.Population;\n";
+
+                //run query
+                topPopulationLivingQuery(query,"Name");
+                break;
+        }
+
+
+
+    }
+
+    /**
+     * Runs the query for topPopulationLiving
+     * @param query sqlQuery
+     * @param scope Continent,Region,Country
+     */
+    private void topPopulationLivingQuery(String query,String scope) {
+        //Run Query
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
+             // Create statement from query
+             Statement useStatement = connection.createStatement();
+             PreparedStatement queryStatement = connection.prepareStatement(query)) {
+
+            //use world db
+            useStatement.execute("USE world;");
+
+
+            // Execute the query
+            ResultSet resultSet = queryStatement.executeQuery();
+
+            // Display the results
+            System.out.println("----------------- RESULTS -----------------");
+            while (resultSet.next()) {
+                System.out.println();
+                System.out.print("Name:" + resultSet.getString(scope) + " | ");
+                System.out.print("City Population:" + resultSet.getString("CityPopulation") + " | ");
+                System.out.print("Outside City Population:" + resultSet.getString("OutsideCityPopulation") + " | ");
+                System.out.print("Total Population:" + resultSet.getString("TotalPopulation") + " | ");
+                System.out.print("City Population Percentage:" + resultSet.getString("CityPopulationPercentage") + " | ");
+                System.out.print("Outside City Population Percentage:" + resultSet.getString("OutsideCityPopulationPercentage") + " | ");
+                System.out.println();
+            }
+            System.out.println("----------------- RESULTS END -----------------");
+
+        } catch (SQLException e) {
+            // Handle SQL exceptions
+            System.err.println("Database error: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * Runs final query and displays info returned by query

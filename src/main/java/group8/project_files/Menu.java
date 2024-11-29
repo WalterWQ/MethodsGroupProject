@@ -25,6 +25,7 @@ public class Menu {
             System.out.println("3. Top Population (World,Continent,Region)");
             System.out.println("4. Top Capital Cities(LRG>SML)");
             System.out.println("5. Top Capital Cities(N)");
+            System.out.println("6. Top Population Living/Not Cities");
             System.out.println("----------------- MAIN MENU END -----------------");
 
             // Read the users input in the menu and convert it to lowercase
@@ -52,6 +53,9 @@ public class Menu {
                     break;
                 case "5":
                     db.getDbQuery().getTopCapitalCitiesN();
+                    break;
+                case "6":
+                    db.getDbQuery().getPopulationLivingCities();
                     break;
                 default:
                     System.out.println("Invalid option, please try again.");
