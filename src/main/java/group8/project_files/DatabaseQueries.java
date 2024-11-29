@@ -1,5 +1,6 @@
 package group8.project_files;
 
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -444,6 +445,69 @@ public class DatabaseQueries {
     }
 
     /**
+     * This method gets the population of people living/not in (continent,region,country)
+     */
+    public void getLanguageStatisticsAll() {
+    //Query
+        String query = "";
+        //Input Scanner
+        Scanner userInput = new Scanner(System.in);
+
+        //Show menu
+        System.out.println("------ Language Reports ------");
+        //SQL
+        query = "SELECT countrylanguage.Language,SUM(country.Population * (countrylanguage.Percentage / 100)) AS TotalSpeakers\n" +
+                "FROM country\n" +
+                "JOIN countrylanguage ON countrylanguage.CountryCode=country.`Code`\n" +
+                "WHERE countrylanguage.Language IN ('Chinese', 'English', 'Hindi', 'Spanish', 'Arabic')\n" +
+                "GROUP BY countrylanguage.Language\n" +
+                "ORDER BY TotalSpeakers DESC;";
+
+        //Run query
+        languageStatisticsQuery(query);
+
+        System.out.println("------ Report End ------");
+
+        }
+
+    /**
+     * Runs the query for topPopulationLiving
+     * @param query sqlQuery
+     * @param scope Continent,Region,Country
+     */
+    private void languageStatisticsQuery(String query) {
+        //Run Query
+        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
+             // Create statement from query
+             Statement useStatement = connection.createStatement();
+             PreparedStatement queryStatement = connection.prepareStatement(query)) {
+
+            //use world db
+            useStatement.execute("USE world;");
+
+
+            // Execute the query
+            ResultSet resultSet = queryStatement.executeQuery();
+
+            // Display the results
+            System.out.println("----------------- RESULTS -----------------");
+            while (resultSet.next()) {
+                System.out.println();
+                System.out.print("Language:" + resultSet.getString("Language") + " | ");
+                System.out.print("Total Speakers:" + resultSet.getString("TotalSpeakers") + " | ");
+                System.out.println();
+            }
+            System.out.println("----------------- RESULTS END -----------------");
+
+        } catch (SQLException e) {
+            // Handle SQL exceptions
+            System.err.println("Database error: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
      * Runs the query for topPopulationLiving
      * @param query sqlQuery
      * @param scope Continent,Region,Country
@@ -793,6 +857,8 @@ public class DatabaseQueries {
         System.out.println("----------------- MENU END -----------------");
     }
 
+
+
     /**
      * This returns all regions as arrayList
      *
@@ -961,5 +1027,4 @@ public class DatabaseQueries {
         }
         return validInput;
     }
-
-}
+    }
