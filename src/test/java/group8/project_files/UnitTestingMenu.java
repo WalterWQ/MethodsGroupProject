@@ -81,7 +81,7 @@ public class UnitTestingMenu {
         String output = outputStream.toString();
 
         // Asserting if the program responds to valid option
-        assertTrue(output.contains("Option 1 selected!"), "The program should print 'Option 1 selected!' when '1' is entered!.");
+        assertTrue(output.contains("Option 1 selected!"), "The program should print 'Option 1 selected!' when '1' is entered.");
     }
 
 
