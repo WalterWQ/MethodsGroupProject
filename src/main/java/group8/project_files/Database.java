@@ -78,6 +78,10 @@ public class Database {
     }
 
     public DatabaseQueries getDbQuery() {
+        if (dbQuery == null) {
+            System.err.println("Error: dbQuery is not initialized.");
+            return null;
+        }
         return dbQuery;
     }
 
