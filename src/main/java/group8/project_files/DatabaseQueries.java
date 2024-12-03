@@ -473,7 +473,7 @@ public class DatabaseQueries {
     /**
      * Runs the query for topPopulationLiving
      * @param query sqlQuery
-     * @param scope Continent,Region,Country
+     *
      */
     private void languageStatisticsQuery(String query) {
         //Run Query
