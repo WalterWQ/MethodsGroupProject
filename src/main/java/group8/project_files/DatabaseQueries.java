@@ -72,9 +72,11 @@ public class DatabaseQueries {
                         "WHERE country.Region = \""+ userChoiceCase3String +"\" " +
                         "ORDER BY Population DESC; ";
                 break;
-
-
         }
+
+
+
+
 
 
         // Run Query
@@ -100,6 +102,107 @@ public class DatabaseQueries {
             System.out.println();
     }catch (SQLException e) {
         e.printStackTrace();}
+    }
+
+    /**
+     * This method gets the population lrg->small from world,continent,region
+     */
+    public void getTopCountryN() {
+
+        //Open user input scanner
+        Scanner userInput = new Scanner(System.in);
+        //Get N
+        System.out.println("How many results would you like to see?");
+        int userN = getValidIntegerInput(userInput,1,99999);
+        //User choice int
+        int userChoiceMenu;
+        //Query
+        String query = "";
+        //Show menu
+        System.out.println("--------- Get Top Country N Population Menu ---------");
+        System.out.println("1 - World");
+        System.out.println("2 - Continent");
+        System.out.println("3 - Region");
+        userChoiceMenu = getValidIntegerInput(userInput,1,3);
+
+        //Decide which query to use
+
+        switch(userChoiceMenu) {
+            // World
+            case 1:
+                query = "SELECT country.Name,country.Continent,country.Region,country.Population,city.Name AS CapitalName " +
+                        "FROM world.country " +
+                        "JOIN city ON city.ID=country.capital " +
+                        "ORDER BY Population DESC " +
+                        "LIMIT "+userN +";";
+
+                break;
+            // Continent
+            case 2:
+                // Get continent menu and let user choose continent
+                ArrayList<String> continentsList = getAllContinents();
+                sqlMenu(continentsList);
+                // user input
+                int userChoice = getValidIntegerInput(userInput,1,continentsList.size()-1);
+                // Convert to string
+                String userChoiceString = continentsList.get(userChoice);
+
+                query = "SELECT country.Name,country.Continent,country.Region,country.Population,city.Name AS CapitalName " +
+                        "FROM world.country " +
+                        "JOIN city ON city.ID=country.capital " +
+                        "WHERE country.Continent = \""+ userChoiceString +"\" " +
+                        "ORDER BY Population DESC " +
+                        "LIMIT "+userN +";";
+
+                break;
+            //Region
+            case 3:
+                //Get Continent
+                ArrayList<String> regionsList = getAllRegions();
+                sqlMenu(regionsList);
+                //Get user input
+                int userChoiceCase3 = getValidIntegerInput(userInput,1,regionsList.size()-1);
+                //Convert to string for query
+                String userChoiceCase3String = regionsList.get(userChoiceCase3);
+
+                //Query
+                query = "SELECT country.Name,country.Continent,country.Region,country.Population,city.Name AS CapitalName " +
+                        "FROM world.country " +
+                        "JOIN city ON city.ID=country.capital " +
+                        "WHERE country.Region = \""+ userChoiceCase3String +"\" " +
+                        "ORDER BY Population DESC "+
+                        "LIMIT "+userN +";";
+                break;
+        }
+
+
+
+
+
+
+        // Run Query
+        try(Connection conn = DriverManager.getConnection(jdbcUrl,username,password);
+            Statement useStatement = conn.createStatement();
+            Statement stmt = conn.createStatement()) {
+
+            // use world
+            useStatement.execute("USE world;");
+
+            //Get result set
+            ResultSet rs = stmt.executeQuery(query);
+
+            //process result set
+            while(rs.next()) {
+                System.out.println();
+                System.out.print("Name :" +rs.getString("Name") + " |");
+                System.out.print("Continent :" +rs.getString("Continent") + " |");
+                System.out.print("Region :" +rs.getString("Region") + " |");
+                System.out.print("Population :" +rs.getString("Population") + " |");
+                System.out.print("Capital :" +rs.getString("CapitalName") + " |");
+            }
+            System.out.println();
+        }catch (SQLException e) {
+            e.printStackTrace();}
     }
 
     /**
