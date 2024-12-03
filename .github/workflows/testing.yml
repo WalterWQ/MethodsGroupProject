@@ -16,9 +16,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Unit Tests For Menu
-        run: mvn -Dtest=group8.project_files.UnitTestingMenu test
+        run: mvn -Dtest=group8.UnitTestingMenu test
       - name: Integration Tests For Database
-        run: mvn -Dtest=group8.project_files.UnitTestingMenu test
+        run: mvn -Dtest=group8.integrationtests test
       - name: Package and Run docker compose
         run: |
           mvn package -DskipTests
