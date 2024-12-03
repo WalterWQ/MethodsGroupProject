@@ -58,6 +58,7 @@
                 <configuration>
                     <includes>
                         <include>**/integrationtests.java</include>
+                        <include>**/UnitTestingMenu.java</include>
                     </includes>
                 </configuration>
             </plugin>
