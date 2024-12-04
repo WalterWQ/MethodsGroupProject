@@ -1,5 +1,6 @@
 package group8;
 
+import group8.project_files.Database;
 import group8.project_files.DatabaseExecutor;
 import org.testcontainers.containers.MySQLContainer;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,76 +19,32 @@ class integrationtests {
     private static MySQLContainer<?> mysqlContainer;
     private static DatabaseExecutor dbExecutor;
     private static Connection connection; // Add the connection variable
+    private static final String jdbcUrl = "jdbc:mysql://localhost:33060/"; // Use 'mysql' as the hostname
+    private static final String username = "root";                      // Default username
+    private static final String password = "rootpassword";              // Password (as set in docker-compose)
 
     /**
-     * Setup testing mysql container and runs the create.sql file while creates the data/table structure
-     * @throws Exception
+     * Setup connection to mysql database
+     * @throws SQLException
      */
     @BeforeAll
-    public static void setUp() throws Exception {
-        // Start MySQL container
-        mysqlContainer = new MySQLContainer<>("mysql:8.0")
-                .withDatabaseName("world")
-                .withUsername("root")
-                .withPassword("rootpassword");
-
-        mysqlContainer.start();
-
-        // Initialize DatabaseExecutor
-        dbExecutor = new DatabaseExecutor();
-
-        // Initialize the connection
-        connection = DriverManager.getConnection(
-                mysqlContainer.getJdbcUrl(),
-                mysqlContainer.getUsername(),
-                mysqlContainer.getPassword());
-
-        // Populate the DB using an SQL file
-        String sqlFilePath = "./db/create.sql"; // Specify the path to your SQL file
-        populateDb(sqlFilePath);
-    }
-
-    /**
-     * Populates the database
-     * @param filePath
-     */
-    public static void populateDb(String filePath) {
-        // reads the SQL file
-        String sqlScript = readSqlFile(filePath);
-        if (sqlScript == null || sqlScript.isEmpty()) {
-            System.err.println("SQL file is empty or not found.");
-            return;
-        }
-
-        //  split the SQL file into individual statements , Bugs out without this!!!
-        String[] statements = sqlScript.split(";");
-
-        // executes each statement
-        try (Statement stmt = connection.createStatement()) {
-            for (String statement : statements) {
-                if (!statement.trim().isEmpty()) {
-                    stmt.executeUpdate(statement.trim());
-                }
-            }
-            System.out.println("Database populated successfully.");
-        } catch (SQLException e) {
-            System.err.println("Error executing SQL script: " + e.getMessage());
-        }
-    }
-
-    /**
-     * simple function which reads the sql file
-     * @param filePath
-     * @return filebytes
-     */
-    private static String readSqlFile(String filePath) {
+    static void setupDatabase() throws SQLException {
+        Database db = new Database();
         try {
-            byte[] bytes = Files.readAllBytes(Paths.get(filePath));
-            return new String(bytes);
-        } catch (IOException e) {
-            System.err.println("Error reading SQL file: " + e.getMessage());
-            return null;
+            connection = DriverManager.getConnection(jdbcUrl,username,password);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Setup database strcuture
+     * @throws SQLException
+     */
+    @Test
+    void setupDatabaseStructure() throws SQLException {
+        Database db = new Database();
+        db.initDB(jdbcUrl, username, password);
     }
 
     /**
@@ -108,6 +65,8 @@ class integrationtests {
     @Test
     void testTableExists() throws SQLException {
         // Check if the 'country' table exists
+        Statement useStatement = connection.createStatement();
+        useStatement.execute("USE world;");
         String checkTableQuery = "SHOW TABLES LIKE 'country'";
         try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(checkTableQuery)) {
             if (rs.next()) {
@@ -124,12 +83,14 @@ class integrationtests {
      * @throws SQLException
      */
     @Test
-    public void testInsertCountryData() throws SQLException {
+    public void testInsertcountryData() throws SQLException {
+        Statement useStatement = connection.createStatement();
+        useStatement.execute("USE world;");
         String query = "SELECT * FROM country WHERE Code = 'ABW'";
         try (PreparedStatement stmt = connection.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
 
-            assertTrue(rs.next(), "Country with code 'ABW' should exist");
+            assertTrue(rs.next(), "country with code 'ABW' should exist");
 
             // Assert that the values match the expected data for 'ABW'
             assertEquals("ABW", rs.getString("Code"));
@@ -149,6 +110,8 @@ class integrationtests {
      */
     @Test
     public void testRowCountAfterInsertion() throws SQLException {
+        Statement useStatement = connection.createStatement();
+        useStatement.execute("USE world;");
         // Test the number of rows in the 'country' table after inserting the data
         String query = "SELECT COUNT(*) AS rowCount FROM country";
         try (PreparedStatement stmt = connection.prepareStatement(query);
@@ -168,6 +131,8 @@ class integrationtests {
      */
     @Test
     public void testPrimaryKeyConstraint() throws SQLException {
+        Statement useStatement = connection.createStatement();
+        useStatement.execute("USE world;");
         // Tests the primary key by attempting to insert a duplicate country
         String duplicateInsertQuery = "INSERT INTO country (Code, Name, Continent, Region, SurfaceArea, Population, LifeExpectancy, GNP) VALUES ('ABW', 'Aruba', 'North America', 'Caribbean', 193.00, 103000, 78.4, 828.00)";
         try (PreparedStatement stmt = connection.prepareStatement(duplicateInsertQuery)) {
@@ -186,6 +151,8 @@ class integrationtests {
      */
     @Test
     public void testNotNullFields() throws SQLException {
+        Statement useStatement = connection.createStatement();
+        useStatement.execute("USE world;");
         // Test to ensure that required fields like Code, Name and Population are not null
         String query = "SELECT Code, Name, Population FROM country WHERE Code IS NULL OR Name IS NULL OR Population IS NULL";
         try (PreparedStatement stmt = connection.prepareStatement(query);
@@ -201,11 +168,13 @@ class integrationtests {
      */
     @Test
     public void testValidDataTypes() throws SQLException {
+        Statement useStatement = connection.createStatement();
+        useStatement.execute("USE world;");
         String query = "SELECT SurfaceArea, Population, LifeExpectancy FROM country WHERE Code = 'ABW'";
         try (PreparedStatement stmt = connection.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
 
-            assertTrue(rs.next(), "Country 'ABW' should exist");
+            assertTrue(rs.next(), "country 'ABW' should exist");
 
             // Validate that the data types match
             assertTrue(rs.getDouble("SurfaceArea") > 0, "SurfaceArea should be a valid number.");
@@ -214,18 +183,4 @@ class integrationtests {
         }
     }
 
-    /**
-     * closes the container after testing
-     */
-    @AfterAll
-    public static void tearDown() {
-        try {
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            System.err.println("Error closing connection: " + e.getMessage());
-        }
-        mysqlContainer.stop();
-    }
 }

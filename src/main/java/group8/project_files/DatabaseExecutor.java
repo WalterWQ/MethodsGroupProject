@@ -17,8 +17,8 @@ public class DatabaseExecutor {
      *
      * @param filePath
      */
-    public void runSqlFile(String filePath) {
-        try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
+    public void runSqlFile(String filePath, String url, String username, String password) {
+        try (Connection connection = DriverManager.getConnection(url, username, password)) {
             System.out.println("Connected to the database successfully!");
             executeSqlFile(connection, filePath);
         } catch (SQLException e) {
@@ -75,9 +75,9 @@ public class DatabaseExecutor {
      * This method runs the create.sql file in order to populate db
      * @param isEmpty takes in a boolean that if 1 implies db empty and populates
      */
-    public void populateDb(boolean isEmpty) {
+    public void populateDb(boolean isEmpty, String url, String username, String password) {
         if(isEmpty) {
-        runSqlFile("./db/create.sql");
+        runSqlFile("./db/create.sql", url, username, password);
     } else {
             System.out.println("DB NOT EMPTY! POPULATION FAILED.");
         }
