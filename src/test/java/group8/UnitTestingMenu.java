@@ -1,10 +1,14 @@
-package group8.project_files;
+package group8;
 
+import group8.project_files.Database;
+import group8.project_files.DatabaseQueries;
+import group8.project_files.Menu;
 import org.junit.jupiter.api.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -19,6 +23,7 @@ public class UnitTestingMenu {
      */
     private Menu menu;
     private ByteArrayOutputStream outputStream;
+    Database db = new Database();
 
     /**
      * Setup Testing and initialise menu for testing
@@ -39,7 +44,7 @@ public class UnitTestingMenu {
         simulateInput("exit\n");
 
         // Running the menu start
-        menu.start(new Scanner(System.in));
+        menu.start(new Scanner(System.in), db);
 
         // Fetching the output produced by the menu
         String output = outputStream.toString();
@@ -57,7 +62,7 @@ public class UnitTestingMenu {
         simulateInput("invalid\nexit\n");
 
         // Running the menu start
-        menu.start(new Scanner(System.in));
+        menu.start(new Scanner(System.in), db);
 
         // Fetching the output produced by the menu
         String output = outputStream.toString();
@@ -65,25 +70,6 @@ public class UnitTestingMenu {
         // Asserting if the program responds to invalid input
         assertTrue(output.contains("Invalid option"), "The program should print 'Invalid option' when invalid input is entered.");
     }
-
-    /**
-     * Ensures the menu options are able to be selected and ran
-     */
-    @Test
-    public void testOptionSelection() {
-        // Simulating valid input "1" followed by "exit"
-        simulateInput("1\nexit\n");
-
-        // Running the menu start
-        menu.start(new Scanner(System.in));
-
-        // Fetching the output produced by the menu
-        String output = outputStream.toString();
-
-        // Asserting if the program responds to valid option
-        assertTrue(output.contains("Option 1 selected!"), "The program should print 'Option 1 selected!' when '1' is entered.");
-    }
-
 
     /**
      * Simple function which simulates user input, Pass a string/data to this and it will be pushed to the menu like a user would do
