@@ -6,7 +6,7 @@
 [![Java CI with Maven](https://github.com/WalterWQ/MethodsGroupProject/actions/workflows/BuildTester.yml/badge.svg)](https://github.com/WalterWQ/MethodsGroupProject/actions/workflows/BuildTester.yml)
 
 
-Features
+Features 27/33 81.81%, Failed to identify the missing 6 features
 |ID|Name|Met|Screenshot|
 |--|----|---|----------|
 |1|All the countries in the **world** organised by largest population to smallest.|Yes|![image](https://github.com/user-attachments/assets/e5e85130-a375-4141-8188-ee1d302562a1)|
@@ -35,4 +35,5 @@ Features
 |25|The population of people, people living in cities, and people not living in cities in each **region**.|Yes|![image](https://github.com/user-attachments/assets/dae39fab-5a41-42b6-85d9-db5c1d6ac25d)|
 |26|The population of people, people living in cities, and people not living in cities in each **country**.|Yes|![image](https://github.com/user-attachments/assets/e85ab8fa-fb6f-422d-8ac6-3bc526aba7e4)|
 |27|Languages (Chineese,English,Hindi,Spanish,Arabic) Largest -> Smallest |Yes|![image](https://github.com/user-attachments/assets/7ca3f571-30a3-4104-b076-77f8e4659696)|
+
 
