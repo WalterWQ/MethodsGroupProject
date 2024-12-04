@@ -29,7 +29,7 @@ Features
 |19|All the capital cities in a **continent** organised by largest population to smallest.|Yes|![image](https://github.com/user-attachments/assets/c196830e-ef7d-4168-9d47-6d9524244338)|
 |20|All the capital cities in a **region** organised by largest to smallest.|Yes|![image](https://github.com/user-attachments/assets/992a4ae6-f46b-400e-8846-ffd1b4952cdf)|
 |21|The top N populated capital cities in the **world** where **N** is provided by the user.|Yes|![image](https://github.com/user-attachments/assets/e536d5fd-614f-4026-9e1d-89548c90c39d)|
-|22|The top N populated capital cities in a **continent** where **N** is provided by the user.|Yes![image](https://github.com/user-attachments/assets/c11d8ec2-ed00-4c0c-9baf-4ce6b94820a7)|
+|22|The top N populated capital cities in a **continent** where **N** is provided by the user.|Yes|![image](https://github.com/user-attachments/assets/c11d8ec2-ed00-4c0c-9baf-4ce6b94820a7)|
 |23|The top N populated capital cities in a **region** where **N** is provided by the user.|Yes|![image](https://github.com/user-attachments/assets/3f17c87c-3e34-490f-a0f0-4c1b6935e344)|
 |24|The population of people, people living in cities, and people not living in cities in each **continent**.|Yes|![image](https://github.com/user-attachments/assets/5de65b41-6619-4231-af39-d119fefac8ac)|
 |25|The population of people, people living in cities, and people not living in cities in each **region**.|Yes|![image](https://github.com/user-attachments/assets/dae39fab-5a41-42b6-85d9-db5c1d6ac25d)|
