@@ -15,9 +15,8 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - run: |
-          mvn package -DskipTests
-          docker compose up --abort-on-container-exit
+      -  run: mvn package -DskipTests
+              docker compose up --abort-on-container-exit
       - name: Unit Tests For Menu
         run: mvn -Dtest=group8.UnitTestingMenu test
       - name: Integration Tests For Database
